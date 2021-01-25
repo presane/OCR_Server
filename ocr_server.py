@@ -59,18 +59,14 @@ while True:
     process_img = prepro.preprocess_img(rotated, name=None)
 
     if pattern_no == 1:
-        #pattern แบบไม่มีขีด
-        #custom_config = r'--oem 1 --psm 8 -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
-        custom_config = r'--oem 1 --psm 6 --user-patterns engPartFBT.user-patterns -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
+        custom_config = r'--oem 1 --psm 6 --user-patterns .user-patterns -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
     elif pattern_no == 2:
-        #pattern แบบมีขีด
-        #custom_config = r'--oem 1 --psm 8 -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
-        custom_config = r'--oem 1 --psm 6 --user-patterns engPartTest.user-patterns -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
-    # custom_config = r'--oem 3 --psm 6 --user-patterns ./engPartNo.user-patterns -c tessedit_char_blacklist=\(\)\;!@#$%^&*_+|'
-    partNoStr = pytesseract.image_to_string(process_img, config=custom_config,lang='eng')
+        custom_config = r'--oem 1 --psm 6 --user-patterns .user-patterns -c tessedit_char_blacklist=IOi\(\)\;!@#$%^&*_+|" "'
+
+    text1 = pytesseract.image_to_string(process_img, config=custom_config,lang='eng')
     #picture
-    print(partNoStr)
-    cv2.imwrite('img_partNumberFBT.png',process_img)
+    print(text1)
+    cv2.imwrite('***.png',process_img)
     
     img_crop_data = frame[tmp[3][0][0][1]: (tmp[3][0][2][1]), tmp[3][0][0][0]: (tmp[3][0][2][0])]
 
@@ -80,17 +76,17 @@ while True:
     #kernel = np.ones((5,5),np.uint8)
     #dilation = cv2.dilate(process_img,kernel,iterations = 1)
 
-    custom_config = r'--oem 2 --psm 6 --user-patterns ./engSerial.user-patterns -c tessedit_char_blacklist=iIO\(\)\;!@#$%^&*_+|" "'
-    serialStr = pytesseract.image_to_string(process_img , config=custom_config,lang='eng')
+    custom_config = r'--oem 2 --psm 6 --user-patterns ./.user-patterns -c tessedit_char_blacklist=iIO\(\)\;!@#$%^&*_+|" "'
+    text2 = pytesseract.image_to_string(process_img , config=custom_config,lang='eng')
 
-    print(serialStr)
-    cv2.imwrite('img_serialModuleFBT.png',process_img)
+    print(text2)
+    cv2.imwrite('***.png',process_img)
     
     #pack data into str
-    st = partNoStr +','+ serialStr
-    serialPart = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff\n]', '', st)
+    st = text1 +','+ text2
+    text1text2 = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff\n]', '', st)
 
-    byt = serialPart.encode()
+    byt = text1text2.encode()
     #c,addr = s.accept()
     print("Got connection from " + str(addr))
     #data=conn.recv(100000) 
@@ -101,7 +97,7 @@ while True:
     #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #s.bind((HOST, PORT))
     #s.send(byt)
-    print('Socket complete for partNo , Serial')
+    print('Socket complete for text1 , text2')
     #s.listen(10)
     #print('Socket now listening step 2')
 
